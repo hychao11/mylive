@@ -5,7 +5,7 @@ android {
     buildToolsVersion "24.0.1"
     defaultConfig {
         applicationId "com.example.myliveapp"
-        minSdkVersion 15
+        minSdkVersion 16
         targetSdkVersion 23
         versionCode 1
         versionName "1.0"
@@ -28,4 +28,7 @@ dependencies {
     testCompile 'junit:junit:4.12'
     compile files('src/main/jniLibs/txrtmpsdk.jar')
     compile files('libs/Volley.jar')
+    compile files('libs/bugly_crash_release__2.1.jar')
+    compile files('libs/zxing-core-3.2.1.jar')
+    compile project(path: ':Pulllibrary')
 }
