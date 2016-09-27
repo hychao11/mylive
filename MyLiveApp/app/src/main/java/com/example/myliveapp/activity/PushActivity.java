@@ -1,31 +1,41 @@
 package com.example.myliveapp.activity;
 
+import android.Manifest;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
-import android.support.v7.app.AppCompatActivity;
+import android.os.Message;
+import android.support.v4.app.ActivityCompat;
 import android.text.TextUtils;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
+import android.widget.PopupWindow;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.myliveapp.R;
-import com.example.myliveapp.util.HWSupportList;
+import com.example.myliveapp.net.HttpNet;
+import com.example.myliveapp.view.CircleImageView;
 import com.tencent.rtmp.ITXLivePushListener;
 import com.tencent.rtmp.TXLiveConstants;
 import com.tencent.rtmp.TXLivePushConfig;
@@ -35,7 +45,7 @@ import com.tencent.rtmp.ui.TXCloudVideoView;
 import java.text.SimpleDateFormat;
 
 
-public class PushActivity extends AppCompatActivity implements View.OnClickListener, ITXLivePushListener, SeekBar.OnSeekBarChangeListener {
+public class PushActivity extends BaseActivity implements View.OnClickListener, ITXLivePushListener, SeekBar.OnSeekBarChangeListener {
     private static final String TAG = PushActivity.class.getSimpleName();
 
     private TXLivePushConfig mLivePushConfig;
@@ -48,12 +58,7 @@ public class PushActivity extends AppCompatActivity implements View.OnClickListe
     private SeekBar mWhiteningSeekBar;
     private ScrollView mScrollView;
     private RadioGroup mRadioGroupBitrate;
-    private Button mBtnBitrate;
-    private Button mBtnPlay;
-    private Button mBtnFaceBeauty;
-    private Button mBtnFlashLight;
-    private Button mBtnTouchFocus;
-    private Button mBtnHWEncode;
+    private Button mBtnFuction;
     private TextView mLogViewStatus;
     private TextView mLogViewEvent;
     private boolean mVideoPublish;
@@ -65,146 +70,48 @@ public class PushActivity extends AppCompatActivity implements View.OnClickListe
     private int mBeautyLevel = 0;
     private int mWhiteningLevel = 0;
     private FrameLayout flayout;
-    private Handler mHandler = new Handler();
+    private RelativeLayout rlNum;
+    private TextView tvNum;
     StringBuffer mLogMsg = new StringBuffer("");
     private Bitmap mBitmap;
     private final int mLogMsgLenLimit = 3000;
+    private int num = 3;
+    private CircleImageView ivHead;
+    private TextView tvName;
+    private SharedPreferences sp;
+    private Button btClose;
+    private Handler mHandler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+
+            //播放部分
+            if (num > 0) {
+                tvNum.setText(--num + "");
+                mHandler.sendEmptyMessageDelayed(1, 1000);
+            }
+            if (num == 0) {
+                FixOrAdjustBitrate();  //根据设置确定是“固定”还是“自动”码率
+                mVideoPublish = true;
+                rlNum.setVisibility(View.GONE);
+            }
+        }
+    };
+
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_push);
-        flayout= (FrameLayout) findViewById(R.id.activity_push);
-        mLivePusher = new TXLivePusher(this);
-        mLivePushConfig = new TXLivePushConfig();
-        mBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.watermark);
-        mCaptureView = (TXCloudVideoView) findViewById(R.id.video_view);
-        mLogViewEvent = (TextView) findViewById(R.id.logViewEvent);
-        mLogViewStatus = (TextView) findViewById(R.id.logViewStatus);
+        if (Build.VERSION.SDK_INT >= 23) {
+            String[] mPermissionList = new String[]{Manifest.permission.CAMERA,Manifest.permission.RECORD_AUDIO};
+            ActivityCompat.requestPermissions(this, mPermissionList, 123);
+        }
+        sp=getSharedPreferences("name",MODE_PRIVATE);
+        initView();
 
-        mVideoPublish = false;
-        mLogViewStatus.setVisibility(View.GONE);
-        mLogViewStatus.setMovementMethod(new ScrollingMovementMethod());
-        mLogViewEvent.setMovementMethod(new ScrollingMovementMethod());
-        mScrollView = (ScrollView)findViewById(R.id.scrollview);
-        mScrollView.setVisibility(View.GONE);
-        //美颜部分
-        mFaceBeautyLayout = (LinearLayout)findViewById(R.id.layoutFaceBeauty);
-        mBeautySeekBar = (SeekBar) findViewById(R.id.beauty_seekbar);
-        mBeautySeekBar.setOnSeekBarChangeListener(this);
-
-        mWhiteningSeekBar = (SeekBar) findViewById(R.id.whitening_seekbar);
-        mWhiteningSeekBar.setOnSeekBarChangeListener(this);
-
-        mBtnFaceBeauty = (Button)findViewById(R.id.btnFaceBeauty);
-        mBtnFaceBeauty.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mFaceBeautyLayout.setVisibility(mFaceBeautyLayout.getVisibility() == View.VISIBLE ? View.GONE : View.VISIBLE);
-            }
-        });
-        //播放部分
-        mBtnPlay = (Button) findViewById(R.id.btnPlay);
-        mBtnPlay.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                if (mVideoPublish) {
-                    stopPublishRtmp();
-                    mVideoPublish = false;
-                } else {
-                    FixOrAdjustBitrate();  //根据设置确定是“固定”还是“自动”码率
-                    mVideoPublish = startPublishRtmp();
-                }
-            }
-        });
-        //log部分
-        final Button btnLog = (Button) findViewById(R.id.btnLog);
-        btnLog.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mLogViewStatus.getVisibility() == View.GONE) {
-                    mLogViewStatus.setVisibility(View.VISIBLE);
-                    mScrollView.setVisibility(View.VISIBLE);
-                    mLogViewEvent.setText(mLogMsg);
-                    scroll2Bottom(mScrollView, mLogViewEvent);
-                    btnLog.setBackgroundResource(R.drawable.log_hidden);
-                } else {
-                    mLogViewStatus.setVisibility(View.GONE);
-                    mScrollView.setVisibility(View.GONE);
-                    btnLog.setBackgroundResource(R.drawable.log_show);
-                }
-            }
-        });
-        //切换前置后置摄像头
-        final Button btnChangeCam = (Button) findViewById(R.id.btnCameraChange);
-        btnChangeCam.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mFrontCamera = !mFrontCamera;
-
-                if (mLivePusher.isPushing()) {
-                    mLivePusher.switchCamera();
-                } else {
-                    mLivePushConfig.setFrontCamera(mFrontCamera);
-                }
-                btnChangeCam.setBackgroundResource(mFrontCamera ? R.drawable.camera_change : R.drawable.camera_change2);
-            }
-        });
-        //开启硬件加速
-        mBtnHWEncode = (Button) findViewById(R.id.btnHWEncode);
-        mBtnHWEncode.getBackground().setAlpha(mHWVideoEncode ? 255 : 100);
-        mBtnHWEncode.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                boolean HWVideoEncode = mHWVideoEncode;
-                mHWVideoEncode = !mHWVideoEncode;
-                mBtnHWEncode.getBackground().setAlpha(mHWVideoEncode ? 255 : 100);
-
-                if (mHWVideoEncode){
-                    if (mLivePushConfig != null) {
-                        if(Build.VERSION.SDK_INT < 16){
-                            Toast.makeText(PushActivity.this, "硬件加速失败，当前手机API级别过低（最低16）", Toast.LENGTH_SHORT).show();
-                            mHWVideoEncode = false;
-                        }
-                        else{
-                            if (HWSupportList.isHWVideoEncodeSupport() == false){
-                                HWListConfirmDialog();
-                                if (mHWListConfirmDialogResult){
-                                    Toast.makeText(PushActivity.this, "尝试硬件编码，推流端/播放端画面可能异常！", Toast.LENGTH_SHORT).show();
-                                }
-                                else{
-                                    mHWVideoEncode = false;
-                                    Toast.makeText(PushActivity.this, "取消硬件加速", Toast.LENGTH_SHORT).show();
-                                }
-                            }
-                        }
-                    }
-                }
-                if(HWVideoEncode != mHWVideoEncode){
-                    mLivePushConfig.setHardwareAcceleration(mHWVideoEncode);
-                    if(mHWVideoEncode == false){
-                        Toast.makeText(PushActivity.this, "取消硬件加速", Toast.LENGTH_SHORT).show();
-                    }
-                    else{
-                        Toast.makeText(PushActivity.this, "开启硬件加速", Toast.LENGTH_SHORT).show();
-                    }
-                }
-                if (mLivePusher != null) {
-                    mLivePusher.setConfig(mLivePushConfig);
-                }
-            }
-        });
+        mHandler.sendEmptyMessageDelayed(1, 1000);
         //码率自适应部分
-        mBtnBitrate = (Button)findViewById(R.id.btnBitrate);
-        mBitrateLayout = (LinearLayout)findViewById(R.id.layoutBitrate);
-        mBtnBitrate.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mBitrateLayout.setVisibility(mBitrateLayout.getVisibility() == View.VISIBLE ? View.GONE : View.VISIBLE);
-            }
-        });
-
-        mRadioGroupBitrate = (RadioGroup)findViewById(R.id.resolutionRadioGroup);
+        mBitrateLayout = (LinearLayout) findViewById(R.id.layoutBitrate);
+        mRadioGroupBitrate = (RadioGroup) findViewById(R.id.resolutionRadioGroup);
         mRadioGroupBitrate.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
 
             @Override
@@ -213,57 +120,73 @@ public class PushActivity extends AppCompatActivity implements View.OnClickListe
                 mBitrateLayout.setVisibility(View.GONE);
             }
         });
-        //闪光灯
-        mBtnFlashLight = (Button)findViewById(R.id.btnFlash);
-        mBtnFlashLight.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mLivePusher == null) {
-                    return;
-                }
 
-                mFlashTurnOn = !mFlashTurnOn;
-                if (!mLivePusher.turnOnFlashLight(mFlashTurnOn)) {
-                    Toast.makeText(PushActivity.this,
-                            "打开闪光灯失败（1）大部分前置摄像头并不支持闪光灯（2）该接口需要在启动预览之后调用", Toast.LENGTH_SHORT).show();
-                }
-
-                mBtnFlashLight.setBackgroundResource(mFlashTurnOn ? R.drawable.flash_off : R.drawable.flash_on);
-            }
-        });
         //手动对焦/自动对焦
-        mBtnTouchFocus = (Button) findViewById(R.id.btnTouchFoucs);
-        mBtnTouchFocus.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mFrontCamera) {
-                    return;
-                }
-
-                mTouchFocus = !mTouchFocus;
-                mLivePushConfig.setTouchFocus(mTouchFocus);
-                v.setBackgroundResource(mTouchFocus ? R.drawable.automatic : R.drawable.manual);
-
-                if (mLivePusher.isPushing()) {
-                    mLivePusher.stopCameraPreview(false);
-                    mLivePusher.startCameraPreview(mCaptureView);
-                }
-
-                Toast.makeText(PushActivity.this, mTouchFocus ? "已开启手动对焦" : "已开启自动对焦", Toast.LENGTH_SHORT).show();
-            }
-        });
         flayout.setOnClickListener(this);
-        mLogViewStatus.setText("Log File Path:"+ Environment.getExternalStorageDirectory().getAbsolutePath()+"/txRtmpLog");
     }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        switch (requestCode) {
+            case 123:
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED ) {
+                    mVideoPublish = true;
+                } else {
+                }
+
+                break;
+        }
+    }
+
+    private void initView() {
+        ivHead= (CircleImageView) findViewById(R.id.iv_head);
+        tvName= (TextView) findViewById(R.id.tv_name);
+        String imgUrl=sp.getString("imgUrl","");
+        String name=sp.getString("name","");
+        tvName.setText(name);
+        HttpNet.loadImg(imgUrl,this,ivHead);
+        flayout = (FrameLayout) findViewById(R.id.activity_push);
+        mBtnFuction = (Button) findViewById(R.id.btnFuction);
+        tvNum = (TextView) findViewById(R.id.push_tv_num);
+        rlNum = (RelativeLayout) findViewById(R.id.push_rl_num);
+        btClose= (Button) findViewById(R.id.bt_close);
+        btClose.setOnClickListener(this);
+        mBtnFuction.setOnClickListener(this);
+        mLivePusher = new TXLivePusher(this);
+        mLivePushConfig = new TXLivePushConfig();
+        mBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.watermark);
+        mCaptureView = (TXCloudVideoView) findViewById(R.id.video_view);
+        mLogViewEvent = (TextView) findViewById(R.id.logViewEvent);
+        mLogViewStatus = (TextView) findViewById(R.id.logViewStatus);
+        mVideoPublish = false;
+        mLogViewStatus.setVisibility(View.GONE);
+        mLogViewStatus.setMovementMethod(new ScrollingMovementMethod());
+        mLogViewEvent.setMovementMethod(new ScrollingMovementMethod());
+        mScrollView = (ScrollView) findViewById(R.id.scrollview);
+        mScrollView.setVisibility(View.GONE);
+        //美颜部分
+        mFaceBeautyLayout = (LinearLayout) findViewById(R.id.layoutFaceBeauty);
+        mBeautySeekBar = (SeekBar) findViewById(R.id.beauty_seekbar);
+        mBeautySeekBar.setOnSeekBarChangeListener(this);
+
+        mWhiteningSeekBar = (SeekBar) findViewById(R.id.whitening_seekbar);
+        mWhiteningSeekBar.setOnSeekBarChangeListener(this);
+    }
+
     @Override
     public void onPause() {
         super.onPause();
+        stopPublishRtmp();
     }
 
     @Override
     public void onResume() {
         super.onResume();
-
+        if (mVideoPublish) {
+            startPublishRtmp();
+        }
         if (mCaptureView != null) {
             mCaptureView.onResume();
         }
@@ -274,8 +197,9 @@ public class PushActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     @Override
-    public void onStop(){
+    public void onStop() {
         super.onStop();
+
         if (mCaptureView != null) {
             mCaptureView.onPause();
         }
@@ -295,10 +219,83 @@ public class PushActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
+            case R.id.btnFuction:
+                showPopWindow();
+                break;
+            case R.id.beauty:
+                beauty();
+                break;
+            case R.id.change:
+                change();
+                break;
+            case R.id.light:
+                light();
+                break;
+            case R.id.btnClose:
+                Intent intent=new Intent(this,RoomFinishActivity.class);
+                startActivity(intent);
+                finish();
+                break;
             default:
                 mFaceBeautyLayout.setVisibility(View.GONE);
                 mBitrateLayout.setVisibility(View.GONE);
         }
+    }
+
+    //美颜
+    private void beauty() {
+        mFaceBeautyLayout.setVisibility(mFaceBeautyLayout.getVisibility() == View.VISIBLE ? View.GONE : View.VISIBLE);
+    }
+
+    //镜头切换
+    private void change() {
+        mFrontCamera = !mFrontCamera;
+
+        if (mLivePusher.isPushing()) {
+            mLivePusher.switchCamera();
+        } else {
+            mLivePushConfig.setFrontCamera(mFrontCamera);
+        }
+    }
+
+    //闪光灯
+    private void light() {
+        if (mLivePusher == null) {
+            return;
+        }
+
+        mFlashTurnOn = !mFlashTurnOn;
+        if (!mLivePusher.turnOnFlashLight(mFlashTurnOn)) {
+            Toast.makeText(PushActivity.this,
+                    "打开闪光灯失败（1）大部分前置摄像头并不支持闪光灯（2）该接口需要在启动预览之后调用", Toast.LENGTH_SHORT).show();
+        }
+
+    }
+
+    private void showPopWindow() {
+        View v = LayoutInflater.from(this).inflate(R.layout.camera_view, null);
+        PopupWindow mPopWindow = new PopupWindow(v);
+        mPopWindow.setWidth(ViewGroup.LayoutParams.WRAP_CONTENT);
+        mPopWindow.setHeight(ViewGroup.LayoutParams.WRAP_CONTENT);
+        //获取自身的长宽高
+        v.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
+        int popupHeight = v.getMeasuredHeight();
+        int popupWidth = v.getMeasuredWidth();
+        LinearLayout line1 = (LinearLayout) v.findViewById(R.id.beauty);
+        LinearLayout line2 = (LinearLayout) v.findViewById(R.id.change);
+        LinearLayout line3 = (LinearLayout) v.findViewById(R.id.light);
+        line1.setOnClickListener(this);
+        line2.setOnClickListener(this);
+        line3.setOnClickListener(this);
+        mPopWindow.setOutsideTouchable(true);
+        mPopWindow.setFocusable(true);
+        mPopWindow.setBackgroundDrawable(getResources().getDrawable(R.drawable.bottom_icon_pop_background));
+        int[] location = new int[2];
+        mBtnFuction.getLocationOnScreen(location);
+
+        //在控件上方显示
+        mPopWindow.showAtLocation(v, Gravity.NO_GRAVITY, (location[0] + v.getWidth() / 2), location[1] - popupHeight);
+
     }
 
     @Override
@@ -330,7 +327,7 @@ public class PushActivity extends AppCompatActivity implements View.OnClickListe
     public void onPushEvent(int event, Bundle param) {
         String msg = param.getString(TXLiveConstants.EVT_DESCRIPTION);
         appendEventLog(event, msg);
-        if (mScrollView.getVisibility() == View.VISIBLE){
+        if (mScrollView.getVisibility() == View.VISIBLE) {
             mLogViewEvent.setText(mLogMsg);
             scroll2Bottom(mScrollView, mLogViewEvent);
         }
@@ -345,12 +342,10 @@ public class PushActivity extends AppCompatActivity implements View.OnClickListe
         if (event == TXLiveConstants.PUSH_ERR_NET_DISCONNECT) {
             stopPublishRtmp();
             mVideoPublish = false;
-        }
-        else if (event == TXLiveConstants.PUSH_WARNING_HW_ACCELERATION_FAIL) {
+        } else if (event == TXLiveConstants.PUSH_WARNING_HW_ACCELERATION_FAIL) {
             Toast.makeText(PushActivity.this, param.getString(TXLiveConstants.EVT_DESCRIPTION), Toast.LENGTH_SHORT).show();
             mHWVideoEncode = false;
             mLivePushConfig.setHardwareAcceleration(mHWVideoEncode);
-            mBtnHWEncode.setBackgroundResource(mHWVideoEncode ? R.drawable.quick : R.drawable.quick2);
         }
     }
 
@@ -363,8 +358,10 @@ public class PushActivity extends AppCompatActivity implements View.OnClickListe
 //            mLivePusher.onLogRecord("[net state]:\n"+str+"\n");
 //        }
     }
+
     /**
      * 实现EVENT VIEW的滚动显示
+     *
      * @param scroll
      * @param inner
      */
@@ -378,7 +375,8 @@ public class PushActivity extends AppCompatActivity implements View.OnClickListe
         }
         scroll.scrollTo(0, offset);
     }
-    private  boolean startPublishRtmp() {
+
+    private boolean startPublishRtmp() {
         String rtmpUrl = "rtmp://2000.livepush.myqcloud.com/live/2000_1f4652b179af11e69776e435c87f075e?bizid=2000";
         if (TextUtils.isEmpty(rtmpUrl) || (!rtmpUrl.trim().toLowerCase().startsWith("rtmp://"))) {
             mVideoPublish = false;
@@ -469,25 +467,21 @@ public class PushActivity extends AppCompatActivity implements View.OnClickListe
         mLivePusher.startCameraPreview(mCaptureView);
         mLivePusher.startPusher(rtmpUrl.trim());
         mLivePusher.setLogLevel(TXLiveConstants.LOG_LEVEL_DEBUG);
-
-        clearLog();
         int[] ver = TXLivePusher.getSDKVersion();
         if (ver != null && ver.length >= 3) {
-            mLogMsg.append(String.format("rtmp sdk version:%d.%d.%d ",ver[0],ver[1],ver[2]));
+            mLogMsg.append(String.format("rtmp sdk version:%d.%d.%d ", ver[0], ver[1], ver[2]));
             mLogViewEvent.setText(mLogMsg);
         }
 
-        mBtnPlay.setBackgroundResource(R.drawable.play_pause);
-
-        appendEventLog(0, "点击推流按钮！");
-
         return true;
     }
+
     protected void clearLog() {
         mLogMsg.setLength(0);
         mLogViewEvent.setText("");
         mLogViewStatus.setText("");
     }
+
     //公用打印辅助函数
     protected void appendEventLog(int event, String message) {
         String str = "receive event: " + event + ", " + message;
@@ -502,13 +496,14 @@ public class PushActivity extends AppCompatActivity implements View.OnClickListe
         }
         mLogMsg = mLogMsg.append("\n" + "[" + date + "]" + message);
     }
+
     private void stopPublishRtmp() {
         mLivePusher.stopCameraPreview(true);
         mLivePusher.setPushListener(null);
         mLivePusher.stopPusher();
         mCaptureView.setVisibility(View.GONE);
-        mBtnPlay.setBackgroundResource(R.drawable.play_start);
     }
+
     public void FixOrAdjustBitrate() {
         if (mRadioGroupBitrate == null || mLivePushConfig == null || mLivePusher == null) {
             return;
@@ -525,7 +520,6 @@ public class PushActivity extends AppCompatActivity implements View.OnClickListe
                     mLivePushConfig.setVideoBitrate(1500);
                     mLivePusher.setConfig(mLivePushConfig);
                 }
-                mBtnBitrate.setBackgroundResource(R.drawable.fix_bitrate);
                 break;
             case 3: /*540p*/
                 if (mLivePusher != null) {
@@ -534,7 +528,6 @@ public class PushActivity extends AppCompatActivity implements View.OnClickListe
                     mLivePushConfig.setVideoBitrate(1000);
                     mLivePusher.setConfig(mLivePushConfig);
                 }
-                mBtnBitrate.setBackgroundResource(R.drawable.fix_bitrate);
                 break;
             case 2: /*360p*/
                 if (mLivePusher != null) {
@@ -543,7 +536,6 @@ public class PushActivity extends AppCompatActivity implements View.OnClickListe
                     mLivePushConfig.setVideoBitrate(700);
                     mLivePusher.setConfig(mLivePushConfig);
                 }
-                mBtnBitrate.setBackgroundResource(R.drawable.fix_bitrate);
                 break;
 
             case 1: /*自动*/
@@ -555,12 +547,12 @@ public class PushActivity extends AppCompatActivity implements View.OnClickListe
                     mLivePushConfig.setVideoBitrate(700);
                     mLivePusher.setConfig(mLivePushConfig);
                 }
-                mBtnBitrate.setBackgroundResource(R.drawable.auto_bitrate);
                 break;
             default:
                 break;
         }
     }
+
     protected void HWListConfirmDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage("警告：当前机型不在白名单中,是否继续尝试硬编码？");
@@ -584,21 +576,23 @@ public class PushActivity extends AppCompatActivity implements View.OnClickListe
         builder.create().show();
         try {
             Looper.loop();
-        }catch (Exception e) {}
+        } catch (Exception e) {
+        }
     }
+
     //公用打印辅助函数
     protected String getNetStatusString(Bundle status) {
         String str = String.format("%-14s %-14s %-12s\n%-14s %-14s %-12s\n%-14s %-14s %-12s\n%-14s",
-                "CPU:"+status.getString(TXLiveConstants.NET_STATUS_CPU_USAGE),
-                "RES:"+status.getInt(TXLiveConstants.NET_STATUS_VIDEO_WIDTH)+"*"+status.getInt(TXLiveConstants.NET_STATUS_VIDEO_HEIGHT),
-                "SPD:"+status.getInt(TXLiveConstants.NET_STATUS_NET_SPEED)+"Kbps",
-                "JIT:"+status.getInt(TXLiveConstants.NET_STATUS_NET_JITTER),
-                "FPS:"+status.getInt(TXLiveConstants.NET_STATUS_VIDEO_FPS),
-                "ARA:"+status.getInt(TXLiveConstants.NET_STATUS_AUDIO_BITRATE)+"Kbps",
-                "QUE:"+status.getInt(TXLiveConstants.NET_STATUS_CODEC_CACHE)+"|"+status.getInt(TXLiveConstants.NET_STATUS_CACHE_SIZE),
-                "DRP:"+status.getInt(TXLiveConstants.NET_STATUS_CODEC_DROP_CNT)+"|"+status.getInt(TXLiveConstants.NET_STATUS_DROP_SIZE),
-                "VRA:"+status.getInt(TXLiveConstants.NET_STATUS_VIDEO_BITRATE)+"Kbps",
-                "SVR:"+status.getString(TXLiveConstants.NET_STATUS_SERVER_IP));
+                "CPU:" + status.getString(TXLiveConstants.NET_STATUS_CPU_USAGE),
+                "RES:" + status.getInt(TXLiveConstants.NET_STATUS_VIDEO_WIDTH) + "*" + status.getInt(TXLiveConstants.NET_STATUS_VIDEO_HEIGHT),
+                "SPD:" + status.getInt(TXLiveConstants.NET_STATUS_NET_SPEED) + "Kbps",
+                "JIT:" + status.getInt(TXLiveConstants.NET_STATUS_NET_JITTER),
+                "FPS:" + status.getInt(TXLiveConstants.NET_STATUS_VIDEO_FPS),
+                "ARA:" + status.getInt(TXLiveConstants.NET_STATUS_AUDIO_BITRATE) + "Kbps",
+                "QUE:" + status.getInt(TXLiveConstants.NET_STATUS_CODEC_CACHE) + "|" + status.getInt(TXLiveConstants.NET_STATUS_CACHE_SIZE),
+                "DRP:" + status.getInt(TXLiveConstants.NET_STATUS_CODEC_DROP_CNT) + "|" + status.getInt(TXLiveConstants.NET_STATUS_DROP_SIZE),
+                "VRA:" + status.getInt(TXLiveConstants.NET_STATUS_VIDEO_BITRATE) + "Kbps",
+                "SVR:" + status.getString(TXLiveConstants.NET_STATUS_SERVER_IP));
         return str;
     }
 }

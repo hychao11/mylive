@@ -8,40 +8,77 @@
     android:orientation="vertical"
     android:background="@drawable/room_live_start_bg"
     tools:context="com.example.myliveapp.activity.RoomStartActivity">
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+    <Button
+        android:id="@+id/bt_close"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
         android:layout_gravity="right"
         android:layout_margin="10dp"
         android:background="@drawable/li_btn_room_close"/>
     <EditText
+        android:id="@+id/et_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
+        android:layout_marginTop="20dp"
         android:textColor="#ffffff"
         android:textColorHint="#ffffff"
-        android:textSize="20sp"
+        android:textSize="16sp"
         android:gravity="center"
         android:hint="写个直播标题可以吸引更多用户"/>
     <RadioGroup
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
+        android:layout_marginTop="20dp"
         android:layout_gravity="center_horizontal">
         <RadioButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:button="@null"
+            android:background="@drawable/wechat_selector"
+            />
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:button="@null"
+            android:background="@drawable/friend_selector"
+            android:layout_marginLeft="20dp"
+            />
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:button="@null"
+            android:background="@drawable/weibo_selector"
+            android:layout_marginLeft="20dp"
+            />
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:button="@null"
+            android:checked="true"
+            android:background="@drawable/qqzone_selector"
+            android:layout_marginLeft="20dp"
+            />
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:button="@null"
+            android:background="@drawable/qq_selector"
+            android:layout_marginLeft="20dp"
             />
     </RadioGroup>
     <TextView
+        android:id="@+id/tv_start"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginRight="20dp"
         android:layout_marginLeft="20dp"
+        android:layout_marginTop="20dp"
         android:text="开始直播"
-        android:textSize="20sp"
+        android:background="@drawable/text_stroke"
+        android:textSize="18sp"
         android:gravity="center"
         android:textColor="#ffffff"
         />
