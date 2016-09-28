@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                >
+    <ImageView
+        android:id="@+id/att_item_img"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_alignParentTop="true"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="name"
+        android:textColor="#ff0000"
+        android:id="@+id/att_item_tv_city"
+        android:layout_marginLeft="15dp"
+        android:layout_alignBottom="@id/att_item_img"
+        />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="name"
+        android:textSize="20sp"
+        android:textColor="#ffffff"
+        android:id="@+id/att_item_tv_name"
+        android:layout_alignBottom="@id/att_item_tv_city"
+        android:layout_marginBottom="20dp"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="LIVE"
+        android:textColor="#ff0000"
+        android:id="@+id/att_item_tv_live"
+        android:visibility="invisible"
+       android:layout_alignRight="@id/att_item_img"
+        android:layout_alignBottom="@id/att_item_img"
+        />
+    <ImageView
+        android:layout_width="12dp"
+        android:layout_height="12dp"
+        android:layout_alignBottom="@id/att_item_img"
+        android:src="@drawable/li_icon_home_location_red"/>
+</RelativeLayout>

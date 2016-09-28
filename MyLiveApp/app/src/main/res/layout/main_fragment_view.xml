@@ -20,6 +20,7 @@
             android:layout_marginTop="10dp"
             android:orientation="horizontal">
             <RadioButton
+                android:id="@+id/main_rb_attention"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:button="@null"
@@ -27,9 +28,9 @@
                 android:drawablePadding="8dp"
                 android:textColor="@drawable/text_color_sel"
                 android:gravity="center"
-                android:checked="true"
                 android:drawableBottom="@drawable/rb_cursor_selector"/>
             <RadioButton
+                android:id="@+id/main_rb_hot"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:button="@null"
@@ -37,9 +38,11 @@
                 android:textColor="@drawable/text_color_sel"
                 android:layout_marginLeft="20dp"
                 android:drawablePadding="8dp"
+                android:checked="true"
                 android:drawableBottom="@drawable/rb_cursor_selector"
                 android:text="热门"/>
             <RadioButton
+                android:id="@+id/main_rb_newest"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:button="@null"
@@ -59,9 +62,8 @@
     </RelativeLayout>
 
     <android.support.v4.view.ViewPager
+        android:id="@+id/main_vp"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"/>
+        android:layout_below="@id/rl_1"/>
 </RelativeLayout>

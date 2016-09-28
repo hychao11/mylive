@@ -24,6 +24,10 @@ public class HttpNet {
         Request request = new PostObjectRequest(url,param,listener);
         VolleyUtil.getRequestQueue().add(request) ;
     }
+    public static  void getObjectApi(String url,ResponseListener listener){
+        Request request = new GetObjectRequest(url,listener);
+        VolleyUtil.getRequestQueue().add(request) ;
+    }
     public static void loadImg(String url, Context context, final ImageView imageView){
         RequestQueue mQueue = VolleyUtil.getRequestQueue();
         ImageRequest imageRequest = new ImageRequest(
