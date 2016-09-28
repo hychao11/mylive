@@ -43,6 +43,7 @@ import com.tencent.rtmp.TXLivePusher;
 import com.tencent.rtmp.ui.TXCloudVideoView;
 
 import java.text.SimpleDateFormat;
+import java.util.Date;
 
 
 public class PushActivity extends BaseActivity implements View.OnClickListener, ITXLivePushListener, SeekBar.OnSeekBarChangeListener {
@@ -80,6 +81,8 @@ public class PushActivity extends BaseActivity implements View.OnClickListener, 
     private TextView tvName;
     private SharedPreferences sp;
     private Button btClose;
+    private Date start;
+    private Date end;
     private Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -104,6 +107,8 @@ public class PushActivity extends BaseActivity implements View.OnClickListener, 
         if (Build.VERSION.SDK_INT >= 23) {
             String[] mPermissionList = new String[]{Manifest.permission.CAMERA,Manifest.permission.RECORD_AUDIO};
             ActivityCompat.requestPermissions(this, mPermissionList, 123);
+        }else{
+            mVideoPublish = true;
         }
         sp=getSharedPreferences("name",MODE_PRIVATE);
         initView();
@@ -151,7 +156,7 @@ public class PushActivity extends BaseActivity implements View.OnClickListener, 
         mBtnFuction = (Button) findViewById(R.id.btnFuction);
         tvNum = (TextView) findViewById(R.id.push_tv_num);
         rlNum = (RelativeLayout) findViewById(R.id.push_rl_num);
-        btClose= (Button) findViewById(R.id.bt_close);
+        btClose= (Button) findViewById(R.id.btnClose);
         btClose.setOnClickListener(this);
         mBtnFuction.setOnClickListener(this);
         mLivePusher = new TXLivePusher(this);
@@ -178,7 +183,6 @@ public class PushActivity extends BaseActivity implements View.OnClickListener, 
     @Override
     public void onPause() {
         super.onPause();
-        stopPublishRtmp();
     }
 
     @Override
@@ -232,10 +236,13 @@ public class PushActivity extends BaseActivity implements View.OnClickListener, 
                 light();
                 break;
             case R.id.btnClose:
+                stopPublishRtmp();
                 Intent intent=new Intent(this,RoomFinishActivity.class);
+                intent.putExtra("time",(end.getTime()-start.getTime()));
                 startActivity(intent);
                 finish();
                 break;
+
             default:
                 mFaceBeautyLayout.setVisibility(View.GONE);
                 mBitrateLayout.setVisibility(View.GONE);
@@ -294,7 +301,7 @@ public class PushActivity extends BaseActivity implements View.OnClickListener, 
         mBtnFuction.getLocationOnScreen(location);
 
         //在控件上方显示
-        mPopWindow.showAtLocation(v, Gravity.NO_GRAVITY, (location[0] + v.getWidth() / 2), location[1] - popupHeight);
+        mPopWindow.showAtLocation(mBtnFuction, Gravity.NO_GRAVITY, (location[0] + v.getWidth() / 2)-popupWidth/4, location[1] - popupHeight-10);
 
     }
 
@@ -377,6 +384,7 @@ public class PushActivity extends BaseActivity implements View.OnClickListener, 
     }
 
     private boolean startPublishRtmp() {
+        start=new Date(System.currentTimeMillis());
         String rtmpUrl = "rtmp://2000.livepush.myqcloud.com/live/2000_1f4652b179af11e69776e435c87f075e?bizid=2000";
         if (TextUtils.isEmpty(rtmpUrl) || (!rtmpUrl.trim().toLowerCase().startsWith("rtmp://"))) {
             mVideoPublish = false;
@@ -498,6 +506,7 @@ public class PushActivity extends BaseActivity implements View.OnClickListener, 
     }
 
     private void stopPublishRtmp() {
+        end =new Date(System.currentTimeMillis());
         mLivePusher.stopCameraPreview(true);
         mLivePusher.setPushListener(null);
         mLivePusher.stopPusher();

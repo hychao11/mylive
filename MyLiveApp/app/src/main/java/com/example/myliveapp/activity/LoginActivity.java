@@ -22,24 +22,29 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
     private UMShareAPI mShareAPI;
     private String imgUrl;
     private String name;
-    private SharedPreferences sp=getSharedPreferences("name",MODE_PRIVATE);;
-    private SharedPreferences.Editor et;
     private boolean isFirst;
+    private SharedPreferences sp ;
+    private SharedPreferences.Editor et;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        sp = getSharedPreferences("name", MODE_PRIVATE);
         isFirst=sp.getBoolean("isFirst",false);
         if (isFirst){
-            Intent intent=new Intent(LoginActivity.this,MainActivity.class);
+            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
             startActivity(intent);
             finish();
-        }else {
-            setContentView(R.layout.activity_login);
-            initView();
-            et = sp.edit();
-            mShareAPI = UMShareAPI.get(this);
         }
+        setContentView(R.layout.activity_login);
+        initView();
+
+        et = sp.edit();
+        mShareAPI = UMShareAPI.get(this);
+
     }
+
+
 
     private void initView() {
         btPhone = (Button) findViewById(R.id.bt_login_phone);
@@ -53,13 +58,27 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
     private UMAuthListener umAuthListener = new UMAuthListener() {
         @Override
         public void onComplete(SHARE_MEDIA platform, int action, Map<String, String> data) {
-            imgUrl=data.get("profile_image_url");
-            name=data.get("screenname");
-            et.putString("imgUrl",imgUrl);
-            et.putString("name",name);
-            et.putBoolean("isFirst",true);
-            et.commit();
-            Intent intent=new Intent(LoginActivity.this,MainActivity.class);
+            mShareAPI.getPlatformInfo(LoginActivity.this, platform, new UMAuthListener() {
+                @Override
+                public void onComplete(SHARE_MEDIA share_media, int i, Map<String, String> map) {
+                    imgUrl = map.get("profile_image_url");
+                    name = map.get("screen_name");
+                    et.putString("imgUrl", imgUrl);
+                    et.putString("name", name);
+                    et.putBoolean("isFirst",true);
+                    et.commit();
+                }
+                @Override
+                public void onError(SHARE_MEDIA share_media, int i, Throwable throwable) {
+
+                }
+                @Override
+                public void onCancel(SHARE_MEDIA share_media, int i) {
+
+                }
+            });
+
+            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
             startActivity(intent);
             finish();
         }

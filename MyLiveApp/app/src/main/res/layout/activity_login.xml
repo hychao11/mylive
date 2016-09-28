@@ -31,25 +31,25 @@
         android:orientation="horizontal">
         <Button
             android:id="@+id/bt_login_weixin"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
             android:background="@drawable/li_icon_wx_normal"/>
         <Button
             android:id="@+id/bt_login_qq"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
             android:layout_marginLeft="20dp"
             android:background="@drawable/li_icon_qq_normal"/>
         <Button
             android:id="@+id/bt_login_phone"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
             android:layout_marginLeft="20dp"
             android:background="@drawable/li_icon_ph_normal"/>
         <Button
             android:id="@+id/bt_login_weibo"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
             android:layout_marginLeft="20dp"
             android:background="@drawable/li_icon_wb_normal"/>
     </LinearLayout>

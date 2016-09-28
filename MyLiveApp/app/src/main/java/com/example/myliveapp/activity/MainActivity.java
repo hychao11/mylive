@@ -15,6 +15,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     private RadioButton rbPersonal;
     private ImageView ivPush;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -25,8 +26,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
     private void initView() {
         rbHome = (RadioButton) findViewById(R.id.main_home);
-        rbHome = (RadioButton) findViewById(R.id.main_personal);
+        rbPersonal = (RadioButton) findViewById(R.id.main_personal);
         ivPush = (ImageView) findViewById(R.id.main_push);
+
         ivPush.setOnClickListener(this);
 
     }

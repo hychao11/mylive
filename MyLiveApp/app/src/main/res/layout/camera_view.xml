@@ -2,7 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:orientation="vertical"
               android:layout_width="wrap_content"
-              android:layout_height="wrap_content">
+              android:layout_height="wrap_content"
+    >
     <LinearLayout
         android:id="@+id/beauty"
         android:layout_width="wrap_content"
@@ -17,6 +18,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="5dp"
             android:textSize="14sp"
+            android:textColor="#ffffff"
             android:text="美颜"/>
     </LinearLayout>
     <LinearLayout
@@ -34,6 +36,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="5dp"
             android:textSize="14sp"
+            android:textColor="#ffffff"
             android:text="镜头翻转"/>
     </LinearLayout>
     <LinearLayout
@@ -51,6 +54,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="5dp"
             android:textSize="14sp"
+            android:textColor="#ffffff"
             android:text="闪关灯"/>
     </LinearLayout>
 </LinearLayout>

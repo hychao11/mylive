@@ -29,7 +29,8 @@ public class ShareActivity extends BaseActivity  implements View.OnClickListener
         setContentView(R.layout.activity_share);
         initView();
         sp=getSharedPreferences("name",MODE_PRIVATE);
-        imageurl=sp.getString("url","");
+        imageurl=sp.getString("imgUrl","");
+
         HttpNet.loadImg(imageurl,this,iv);
         tvContent.setText("聚范直播平台\n我在直播！你还不快来！");
         image = new UMImage(ShareActivity.this, imageurl);//网络图片
@@ -58,6 +59,9 @@ public class ShareActivity extends BaseActivity  implements View.OnClickListener
                         .withMedia(image)
                         .withTitle(et.getText().toString())
                         .share();
+                Intent intent2=new Intent(this,PushActivity.class);
+                startActivity(intent2);
+                finish();
                 break;
         }
     }
