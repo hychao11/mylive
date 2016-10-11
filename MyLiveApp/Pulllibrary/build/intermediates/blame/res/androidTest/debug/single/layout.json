@@ -6,5 +6,9 @@
     {
         "merged": "E:\\my\\MyLiveApp\\Pulllibrary\\build\\intermediates\\res\\merged\\androidTest\\debug\\layout\\pull_to_refresh_header_vertical.xml",
         "source": "E:\\my\\MyLiveApp\\Pulllibrary\\build\\intermediates\\bundles\\debug\\res\\layout\\pull_to_refresh_header_vertical.xml"
+    },
+    {
+        "merged": "E:\\my\\MyLiveApp\\Pulllibrary\\build\\intermediates\\res\\merged\\androidTest\\debug\\layout\\pull_to_refresh_header_simple.xml",
+        "source": "E:\\my\\MyLiveApp\\Pulllibrary\\build\\intermediates\\bundles\\debug\\res\\layout\\pull_to_refresh_header_simple.xml"
     }
 ]

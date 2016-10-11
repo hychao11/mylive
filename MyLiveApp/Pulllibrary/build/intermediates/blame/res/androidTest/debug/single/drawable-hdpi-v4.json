@@ -1,11 +1,35 @@
 [
     {
+        "merged": "E:\\my\\MyLiveApp\\Pulllibrary\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable-hdpi-v4\\li_refresh_cat_2.png",
+        "source": "E:\\my\\MyLiveApp\\Pulllibrary\\build\\intermediates\\bundles\\debug\\res\\drawable-hdpi-v4\\li_refresh_cat_2.png"
+    },
+    {
         "merged": "E:\\my\\MyLiveApp\\Pulllibrary\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable-hdpi-v4\\indicator_arrow.png",
         "source": "E:\\my\\MyLiveApp\\Pulllibrary\\build\\intermediates\\bundles\\debug\\res\\drawable-hdpi-v4\\indicator_arrow.png"
     },
     {
+        "merged": "E:\\my\\MyLiveApp\\Pulllibrary\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable-hdpi-v4\\li_refresh_cat_5.png",
+        "source": "E:\\my\\MyLiveApp\\Pulllibrary\\build\\intermediates\\bundles\\debug\\res\\drawable-hdpi-v4\\li_refresh_cat_5.png"
+    },
+    {
+        "merged": "E:\\my\\MyLiveApp\\Pulllibrary\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable-hdpi-v4\\li_refresh_cat_1.png",
+        "source": "E:\\my\\MyLiveApp\\Pulllibrary\\build\\intermediates\\bundles\\debug\\res\\drawable-hdpi-v4\\li_refresh_cat_1.png"
+    },
+    {
+        "merged": "E:\\my\\MyLiveApp\\Pulllibrary\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable-hdpi-v4\\li_refresh_cat_4.png",
+        "source": "E:\\my\\MyLiveApp\\Pulllibrary\\build\\intermediates\\bundles\\debug\\res\\drawable-hdpi-v4\\li_refresh_cat_4.png"
+    },
+    {
+        "merged": "E:\\my\\MyLiveApp\\Pulllibrary\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable-hdpi-v4\\li_refresh_cat_6.png",
+        "source": "E:\\my\\MyLiveApp\\Pulllibrary\\build\\intermediates\\bundles\\debug\\res\\drawable-hdpi-v4\\li_refresh_cat_6.png"
+    },
+    {
         "merged": "E:\\my\\MyLiveApp\\Pulllibrary\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable-hdpi-v4\\default_ptr_rotate.png",
         "source": "E:\\my\\MyLiveApp\\Pulllibrary\\build\\intermediates\\bundles\\debug\\res\\drawable-hdpi-v4\\default_ptr_rotate.png"
+    },
+    {
+        "merged": "E:\\my\\MyLiveApp\\Pulllibrary\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable-hdpi-v4\\li_refresh_cat_3.png",
+        "source": "E:\\my\\MyLiveApp\\Pulllibrary\\build\\intermediates\\bundles\\debug\\res\\drawable-hdpi-v4\\li_refresh_cat_3.png"
     },
     {
         "merged": "E:\\my\\MyLiveApp\\Pulllibrary\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable-hdpi-v4\\default_ptr_flip.png",

@@ -8,22 +8,27 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -34,8 +39,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.myliveapp.R;
+import com.example.myliveapp.adapter.PushViewPagerAdapter;
 import com.example.myliveapp.net.HttpNet;
 import com.example.myliveapp.view.CircleImageView;
+import com.google.android.gms.appindexing.Action;
+import com.google.android.gms.appindexing.AppIndex;
+import com.google.android.gms.appindexing.Thing;
+import com.google.android.gms.common.api.GoogleApiClient;
 import com.tencent.rtmp.ITXLivePushListener;
 import com.tencent.rtmp.TXLiveConstants;
 import com.tencent.rtmp.TXLivePushConfig;
@@ -43,7 +53,11 @@ import com.tencent.rtmp.TXLivePusher;
 import com.tencent.rtmp.ui.TXCloudVideoView;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+
+import static com.umeng.socialize.utils.ContextUtil.getContext;
 
 
 public class PushActivity extends BaseActivity implements View.OnClickListener, ITXLivePushListener, SeekBar.OnSeekBarChangeListener {
@@ -59,7 +73,7 @@ public class PushActivity extends BaseActivity implements View.OnClickListener, 
     private SeekBar mWhiteningSeekBar;
     private ScrollView mScrollView;
     private RadioGroup mRadioGroupBitrate;
-    private Button mBtnFuction;
+
     private TextView mLogViewStatus;
     private TextView mLogViewEvent;
     private boolean mVideoPublish;
@@ -77,12 +91,21 @@ public class PushActivity extends BaseActivity implements View.OnClickListener, 
     private Bitmap mBitmap;
     private final int mLogMsgLenLimit = 3000;
     private int num = 3;
-    private CircleImageView ivHead;
-    private TextView tvName;
     private SharedPreferences sp;
     private Button btClose;
     private Date start;
     private Date end;
+    private ViewPager vp;
+    private List<View> list;
+    private View v1;
+    private View v2;
+    private CircleImageView ivHead;
+    private TextView tvName;
+    private Button mBtnFuction;
+    private Button mBtnMsg;
+    private EditText etMsg;
+    private ListView msgLv;
+
     private Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -99,18 +122,23 @@ public class PushActivity extends BaseActivity implements View.OnClickListener, 
             }
         }
     };
+    /**
+     * ATTENTION: This was auto-generated to implement the App Indexing API.
+     * See https://g.co/AppIndexing/AndroidStudio for more information.
+     */
+    private GoogleApiClient mClient;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_push);
         if (Build.VERSION.SDK_INT >= 23) {
-            String[] mPermissionList = new String[]{Manifest.permission.CAMERA,Manifest.permission.RECORD_AUDIO};
+            String[] mPermissionList = new String[]{Manifest.permission.CAMERA, Manifest.permission.RECORD_AUDIO};
             ActivityCompat.requestPermissions(this, mPermissionList, 123);
-        }else{
+        } else {
             mVideoPublish = true;
         }
-        sp=getSharedPreferences("name",MODE_PRIVATE);
+
         initView();
 
         mHandler.sendEmptyMessageDelayed(1, 1000);
@@ -128,6 +156,9 @@ public class PushActivity extends BaseActivity implements View.OnClickListener, 
 
         //手动对焦/自动对焦
         flayout.setOnClickListener(this);
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        mClient = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
     }
 
     @Override
@@ -136,7 +167,7 @@ public class PushActivity extends BaseActivity implements View.OnClickListener, 
         switch (requestCode) {
             case 123:
                 if (grantResults.length > 0
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED ) {
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     mVideoPublish = true;
                 } else {
                 }
@@ -146,19 +177,15 @@ public class PushActivity extends BaseActivity implements View.OnClickListener, 
     }
 
     private void initView() {
-        ivHead= (CircleImageView) findViewById(R.id.iv_head);
-        tvName= (TextView) findViewById(R.id.tv_name);
-        String imgUrl=sp.getString("imgUrl","");
-        String name=sp.getString("name","");
-        tvName.setText(name);
-        HttpNet.loadImg(imgUrl,this,ivHead);
+        sp = getSharedPreferences("name", MODE_PRIVATE);
+        vp = (ViewPager) findViewById(R.id.push_vp);
         flayout = (FrameLayout) findViewById(R.id.activity_push);
-        mBtnFuction = (Button) findViewById(R.id.btnFuction);
+        list = new ArrayList<View>();
         tvNum = (TextView) findViewById(R.id.push_tv_num);
         rlNum = (RelativeLayout) findViewById(R.id.push_rl_num);
-        btClose= (Button) findViewById(R.id.btnClose);
+        btClose = (Button) findViewById(R.id.btnClose);
         btClose.setOnClickListener(this);
-        mBtnFuction.setOnClickListener(this);
+
         mLivePusher = new TXLivePusher(this);
         mLivePushConfig = new TXLivePushConfig();
         mBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.watermark);
@@ -178,6 +205,27 @@ public class PushActivity extends BaseActivity implements View.OnClickListener, 
 
         mWhiteningSeekBar = (SeekBar) findViewById(R.id.whitening_seekbar);
         mWhiteningSeekBar.setOnSeekBarChangeListener(this);
+        createMenu();
+    }
+
+    private void createMenu() {
+        v1 = View.inflate(this, R.layout.menu_view_2, null);
+        v2 = View.inflate(this, R.layout.menu_view, null);
+        ivHead = (CircleImageView) v2.findViewById(R.id.iv_head);
+        tvName = (TextView) v2.findViewById(R.id.tv_name);
+        mBtnFuction = (Button) v2.findViewById(R.id.btnFuction);
+        mBtnMsg = (Button) v2.findViewById(R.id.btnMsg);
+        msgLv= (ListView) findViewById(R.id.msg_lv);
+        String imgUrl = sp.getString("imgUrl", "");
+        String name = sp.getString("name", "");
+        tvName.setText(name);
+        HttpNet.loadImg(imgUrl, getContext(), ivHead);
+        mBtnFuction.setOnClickListener(this);
+        mBtnMsg.setOnClickListener(this);
+        list.add(v1);
+        list.add(v2);
+        vp.setAdapter(new PushViewPagerAdapter(list, this));
+        vp.setCurrentItem(1);
     }
 
     @Override
@@ -202,13 +250,18 @@ public class PushActivity extends BaseActivity implements View.OnClickListener, 
 
     @Override
     public void onStop() {
-        super.onStop();
+        super.onStop();// ATTENTION: This was auto-generated to implement the App Indexing API.
+// See https://g.co/AppIndexing/AndroidStudio for more information.
+        AppIndex.AppIndexApi.end(mClient, getIndexApiAction());
 
         if (mCaptureView != null) {
             mCaptureView.onPause();
         }
 
         mLivePusher.stopCameraPreview(false);
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        mClient.disconnect();
     }
 
     @Override
@@ -226,6 +279,9 @@ public class PushActivity extends BaseActivity implements View.OnClickListener, 
             case R.id.btnFuction:
                 showPopWindow();
                 break;
+            case R.id.btnMsg:
+                showMessage();
+                break;
             case R.id.beauty:
                 beauty();
                 break;
@@ -237,8 +293,8 @@ public class PushActivity extends BaseActivity implements View.OnClickListener, 
                 break;
             case R.id.btnClose:
                 stopPublishRtmp();
-                Intent intent=new Intent(this,RoomFinishActivity.class);
-                intent.putExtra("time",(end.getTime()-start.getTime()));
+                Intent intent = new Intent(this, RoomFinishActivity.class);
+                intent.putExtra("time", (end.getTime() - start.getTime()));
                 startActivity(intent);
                 finish();
                 break;
@@ -249,34 +305,23 @@ public class PushActivity extends BaseActivity implements View.OnClickListener, 
         }
     }
 
-    //美颜
-    private void beauty() {
-        mFaceBeautyLayout.setVisibility(mFaceBeautyLayout.getVisibility() == View.VISIBLE ? View.GONE : View.VISIBLE);
-    }
-
-    //镜头切换
-    private void change() {
-        mFrontCamera = !mFrontCamera;
-
-        if (mLivePusher.isPushing()) {
-            mLivePusher.switchCamera();
-        } else {
-            mLivePushConfig.setFrontCamera(mFrontCamera);
-        }
-    }
-
-    //闪光灯
-    private void light() {
-        if (mLivePusher == null) {
-            return;
-        }
-
-        mFlashTurnOn = !mFlashTurnOn;
-        if (!mLivePusher.turnOnFlashLight(mFlashTurnOn)) {
-            Toast.makeText(PushActivity.this,
-                    "打开闪光灯失败（1）大部分前置摄像头并不支持闪光灯（2）该接口需要在启动预览之后调用", Toast.LENGTH_SHORT).show();
-        }
-
+    private void showMessage() {
+        View v = LayoutInflater.from(this).inflate(R.layout.message_view, null);
+        PopupWindow mPopWindow = new PopupWindow(v);
+        mPopWindow.setWidth(ViewGroup.LayoutParams.WRAP_CONTENT);
+        mPopWindow.setHeight(ViewGroup.LayoutParams.WRAP_CONTENT);
+        //获取自身的长宽高
+        v.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
+        etMsg = (EditText) v.findViewById(R.id.msg_editText);
+        Button btSend = (Button) v.findViewById(R.id.msg_send);
+        btSend.setOnClickListener(this);
+        int popupHeight = v.getMeasuredHeight();
+        int popupWidth = v.getMeasuredWidth();
+        mPopWindow.setOutsideTouchable(true);
+        mPopWindow.setFocusable(true);
+        int[] location = new int[2];
+        mBtnMsg.getLocationOnScreen(location);
+        mPopWindow.showAtLocation(mBtnMsg, Gravity.NO_GRAVITY, location[0], location[1] - popupHeight);
     }
 
     private void showPopWindow() {
@@ -301,7 +346,39 @@ public class PushActivity extends BaseActivity implements View.OnClickListener, 
         mBtnFuction.getLocationOnScreen(location);
 
         //在控件上方显示
-        mPopWindow.showAtLocation(mBtnFuction, Gravity.NO_GRAVITY, (location[0] + v.getWidth() / 2)-popupWidth/4, location[1] - popupHeight-10);
+        mPopWindow.showAtLocation(mBtnFuction, Gravity.NO_GRAVITY, (location[0] + v.getWidth() / 2) - popupWidth / 3, location[1] - popupHeight - 10);
+
+    }
+
+    //美颜
+    private void beauty() {
+        mFaceBeautyLayout.setVisibility(mFaceBeautyLayout.getVisibility() == View.VISIBLE ? View.GONE : View.VISIBLE);
+    }
+
+    //镜头切换
+    private void change() {
+        mFrontCamera = !mFrontCamera;
+        mLivePushConfig.setTouchFocus(false);
+        if (mLivePusher.isPushing()) {
+            mLivePusher.switchCamera();
+            mLivePusher.stopCameraPreview(false);
+            mLivePusher.startCameraPreview(mCaptureView);
+        } else {
+            mLivePushConfig.setFrontCamera(mFrontCamera);
+        }
+    }
+
+    //闪光灯
+    private void light() {
+        if (mLivePusher == null) {
+            return;
+        }
+
+        mFlashTurnOn = !mFlashTurnOn;
+        if (!mLivePusher.turnOnFlashLight(mFlashTurnOn)) {
+            Toast.makeText(PushActivity.this,
+                    "打开闪光灯失败（1）大部分前置摄像头并不支持闪光灯（2）该接口需要在启动预览之后调用", Toast.LENGTH_SHORT).show();
+        }
 
     }
 
@@ -312,7 +389,7 @@ public class PushActivity extends BaseActivity implements View.OnClickListener, 
         } else if (seekBar.getId() == R.id.whitening_seekbar) {
             mWhiteningLevel = progress;
         }
-
+        mFaceBeautyLayout.setVisibility(View.INVISIBLE);
         if (mLivePusher != null) {
             if (!mLivePusher.setBeautyFilter(mBeautyLevel, mWhiteningLevel)) {
                 Toast.makeText(PushActivity.this, "当前机型的性能无法支持美颜功能", Toast.LENGTH_SHORT).show();
@@ -384,7 +461,7 @@ public class PushActivity extends BaseActivity implements View.OnClickListener, 
     }
 
     private boolean startPublishRtmp() {
-        start=new Date(System.currentTimeMillis());
+        start = new Date(System.currentTimeMillis());
         String rtmpUrl = "rtmp://2000.livepush.myqcloud.com/live/2000_1f4652b179af11e69776e435c87f075e?bizid=2000";
         if (TextUtils.isEmpty(rtmpUrl) || (!rtmpUrl.trim().toLowerCase().startsWith("rtmp://"))) {
             mVideoPublish = false;
@@ -506,7 +583,7 @@ public class PushActivity extends BaseActivity implements View.OnClickListener, 
     }
 
     private void stopPublishRtmp() {
-        end =new Date(System.currentTimeMillis());
+        end = new Date(System.currentTimeMillis());
         mLivePusher.stopCameraPreview(true);
         mLivePusher.setPushListener(null);
         mLivePusher.stopPusher();
@@ -603,5 +680,44 @@ public class PushActivity extends BaseActivity implements View.OnClickListener, 
                 "VRA:" + status.getInt(TXLiveConstants.NET_STATUS_VIDEO_BITRATE) + "Kbps",
                 "SVR:" + status.getString(TXLiveConstants.NET_STATUS_SERVER_IP));
         return str;
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            stopPublishRtmp();
+            Intent intent = new Intent(this, RoomFinishActivity.class);
+            intent.putExtra("time", (end.getTime() - start.getTime()));
+            startActivity(intent);
+            finish();
+            return false;
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
+    /**
+     * ATTENTION: This was auto-generated to implement the App Indexing API.
+     * See https://g.co/AppIndexing/AndroidStudio for more information.
+     */
+    public Action getIndexApiAction() {
+        Thing object = new Thing.Builder()
+                .setName("Push Page") // TODO: Define a title for the content shown.
+                // TODO: Make sure this auto-generated URL is correct.
+                .setUrl(Uri.parse("http://[ENTER-YOUR-URL-HERE]"))
+                .build();
+        return new Action.Builder(Action.TYPE_VIEW)
+                .setObject(object)
+                .setActionStatus(Action.STATUS_TYPE_COMPLETED)
+                .build();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        mClient.connect();
+        AppIndex.AppIndexApi.start(mClient, getIndexApiAction());
     }
 }

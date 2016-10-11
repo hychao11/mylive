@@ -23,7 +23,6 @@ import android.graphics.Typeface;
 import android.graphics.drawable.AnimationDrawable;
 import android.graphics.drawable.Drawable;
 import android.text.TextUtils;
-import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -75,7 +74,9 @@ public abstract class LoadingLayout extends FrameLayout implements ILoadingLayou
 				break;
 			case VERTICAL:
 			default:
-				LayoutInflater.from(context).inflate(R.layout.pull_to_refresh_header_vertical, this);
+				//LayoutInflater.from(context).inflate(R.layout.pull_to_refresh_header_vertical, this);
+				// 修改代码
+				LayoutInflater.from(context).inflate(R.layout.pull_to_refresh_header_simple, this);
 				break;
 		}
 
@@ -108,37 +109,37 @@ public abstract class LoadingLayout extends FrameLayout implements ILoadingLayou
 				break;
 		}
 
-		if (attrs.hasValue(R.styleable.PullToRefresh_ptrHeaderBackground)) {
-			Drawable background = attrs.getDrawable(R.styleable.PullToRefresh_ptrHeaderBackground);
-			if (null != background) {
-				ViewCompat.setBackground(this, background);
-			}
-		}
-
-		if (attrs.hasValue(R.styleable.PullToRefresh_ptrHeaderTextAppearance)) {
-			TypedValue styleID = new TypedValue();
-			attrs.getValue(R.styleable.PullToRefresh_ptrHeaderTextAppearance, styleID);
-			setTextAppearance(styleID.data);
-		}
-		if (attrs.hasValue(R.styleable.PullToRefresh_ptrSubHeaderTextAppearance)) {
-			TypedValue styleID = new TypedValue();
-			attrs.getValue(R.styleable.PullToRefresh_ptrSubHeaderTextAppearance, styleID);
-			setSubTextAppearance(styleID.data);
-		}
-
-		// Text Color attrs need to be set after TextAppearance attrs
-		if (attrs.hasValue(R.styleable.PullToRefresh_ptrHeaderTextColor)) {
-			ColorStateList colors = attrs.getColorStateList(R.styleable.PullToRefresh_ptrHeaderTextColor);
-			if (null != colors) {
-				setTextColor(colors);
-			}
-		}
-		if (attrs.hasValue(R.styleable.PullToRefresh_ptrHeaderSubTextColor)) {
-			ColorStateList colors = attrs.getColorStateList(R.styleable.PullToRefresh_ptrHeaderSubTextColor);
-			if (null != colors) {
-				setSubTextColor(colors);
-			}
-		}
+//		if (attrs.hasValue(R.styleable.PullToRefresh_ptrHeaderBackground)) {
+//			Drawable background = attrs.getDrawable(R.styleable.PullToRefresh_ptrHeaderBackground);
+//			if (null != background) {
+//				ViewCompat.setBackground(this, background);
+//			}
+//		}
+//
+//		if (attrs.hasValue(R.styleable.PullToRefresh_ptrHeaderTextAppearance)) {
+//			TypedValue styleID = new TypedValue();
+//			attrs.getValue(R.styleable.PullToRefresh_ptrHeaderTextAppearance, styleID);
+//			setTextAppearance(styleID.data);
+//		}
+//		if (attrs.hasValue(R.styleable.PullToRefresh_ptrSubHeaderTextAppearance)) {
+//			TypedValue styleID = new TypedValue();
+//			attrs.getValue(R.styleable.PullToRefresh_ptrSubHeaderTextAppearance, styleID);
+//			setSubTextAppearance(styleID.data);
+//		}
+//
+//		// Text Color attrs need to be set after TextAppearance attrs
+//		if (attrs.hasValue(R.styleable.PullToRefresh_ptrHeaderTextColor)) {
+//			ColorStateList colors = attrs.getColorStateList(R.styleable.PullToRefresh_ptrHeaderTextColor);
+//			if (null != colors) {
+//				setTextColor(colors);
+//			}
+//		}
+//		if (attrs.hasValue(R.styleable.PullToRefresh_ptrHeaderSubTextColor)) {
+//			ColorStateList colors = attrs.getColorStateList(R.styleable.PullToRefresh_ptrHeaderSubTextColor);
+//			if (null != colors) {
+//				setSubTextColor(colors);
+//			}
+//		}
 
 		// Try and get defined drawable from Attrs
 		Drawable imageDrawable = null;
@@ -203,18 +204,18 @@ public abstract class LoadingLayout extends FrameLayout implements ILoadingLayou
 	}
 
 	public final void hideAllViews() {
-		if (View.VISIBLE == mHeaderText.getVisibility()) {
-			mHeaderText.setVisibility(View.INVISIBLE);
-		}
-		if (View.VISIBLE == mHeaderProgress.getVisibility()) {
-			mHeaderProgress.setVisibility(View.INVISIBLE);
-		}
-		if (View.VISIBLE == mHeaderImage.getVisibility()) {
-			mHeaderImage.setVisibility(View.INVISIBLE);
-		}
-		if (View.VISIBLE == mSubHeaderText.getVisibility()) {
-			mSubHeaderText.setVisibility(View.INVISIBLE);
-		}
+//		if (View.VISIBLE == mHeaderText.getVisibility()) {
+//			mHeaderText.setVisibility(View.INVISIBLE);
+//		}
+//		if (View.VISIBLE == mHeaderProgress.getVisibility()) {
+//			mHeaderProgress.setVisibility(View.INVISIBLE);
+//		}
+//		if (View.VISIBLE == mHeaderImage.getVisibility()) {
+//			mHeaderImage.setVisibility(View.INVISIBLE);
+//		}
+//		if (View.VISIBLE == mSubHeaderText.getVisibility()) {
+//			mSubHeaderText.setVisibility(View.INVISIBLE);
+//		}
 	}
 
 	public final void onPull(float scaleOfLayout) {
@@ -224,9 +225,9 @@ public abstract class LoadingLayout extends FrameLayout implements ILoadingLayou
 	}
 
 	public final void pullToRefresh() {
-		if (null != mHeaderText) {
-			mHeaderText.setText(mPullLabel);
-		}
+//		if (null != mHeaderText) {
+//			mHeaderText.setText(mPullLabel);
+//		}
 
 		// Now call the callback
 		pullToRefreshImpl();
@@ -244,15 +245,15 @@ public abstract class LoadingLayout extends FrameLayout implements ILoadingLayou
 			refreshingImpl();
 		}
 
-		if (null != mSubHeaderText) {
-			mSubHeaderText.setVisibility(View.GONE);
-		}
+//		if (null != mSubHeaderText) {
+//			mSubHeaderText.setVisibility(View.GONE);
+//		}
 	}
 
 	public final void releaseToRefresh() {
-		if (null != mHeaderText) {
-			mHeaderText.setText(mReleaseLabel);
-		}
+//		if (null != mHeaderText) {
+//			mHeaderText.setText(mReleaseLabel);
+//		}
 
 		// Now call the callback
 		releaseToRefreshImpl();
@@ -271,18 +272,18 @@ public abstract class LoadingLayout extends FrameLayout implements ILoadingLayou
 			resetImpl();
 		}
 
-		if (null != mSubHeaderText) {
-			if (TextUtils.isEmpty(mSubHeaderText.getText())) {
-				mSubHeaderText.setVisibility(View.GONE);
-			} else {
-				mSubHeaderText.setVisibility(View.VISIBLE);
-			}
-		}
+//		if (null != mSubHeaderText) {
+//			if (TextUtils.isEmpty(mSubHeaderText.getText())) {
+//				mSubHeaderText.setVisibility(View.GONE);
+//			} else {
+//				mSubHeaderText.setVisibility(View.VISIBLE);
+//			}
+//		}
 	}
 
 	@Override
 	public void setLastUpdatedLabel(CharSequence label) {
-		setSubHeaderText(label);
+		//setSubHeaderText(label);
 	}
 
 	public final void setLoadingDrawable(Drawable imageDrawable) {
@@ -312,18 +313,18 @@ public abstract class LoadingLayout extends FrameLayout implements ILoadingLayou
 	}
 
 	public final void showInvisibleViews() {
-		if (View.INVISIBLE == mHeaderText.getVisibility()) {
-			mHeaderText.setVisibility(View.VISIBLE);
-		}
-		if (View.INVISIBLE == mHeaderProgress.getVisibility()) {
-			mHeaderProgress.setVisibility(View.VISIBLE);
-		}
+//		if (View.INVISIBLE == mHeaderText.getVisibility()) {
+//			mHeaderText.setVisibility(View.VISIBLE);
+//		}
+//		if (View.INVISIBLE == mHeaderProgress.getVisibility()) {
+//			mHeaderProgress.setVisibility(View.VISIBLE);
+//		}
 		if (View.INVISIBLE == mHeaderImage.getVisibility()) {
 			mHeaderImage.setVisibility(View.VISIBLE);
 		}
-		if (View.INVISIBLE == mSubHeaderText.getVisibility()) {
-			mSubHeaderText.setVisibility(View.VISIBLE);
-		}
+//		if (View.INVISIBLE == mSubHeaderText.getVisibility()) {
+//			mSubHeaderText.setVisibility(View.VISIBLE);
+//		}
 	}
 
 	/**

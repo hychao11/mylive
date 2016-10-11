@@ -5,6 +5,7 @@
     android:id="@+id/activity_push_share"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:fillViewport="true"
     android:orientation="vertical"
     android:background="@drawable/room_live_start_bg"
     tools:context="com.example.myliveapp.activity.RoomStartActivity">
@@ -15,71 +16,96 @@
         android:layout_gravity="right"
         android:layout_margin="10dp"
         android:background="@drawable/li_btn_room_close"/>
-    <EditText
-        android:id="@+id/et_title"
+
+
+            <EditText
+                android:id="@+id/et_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:gravity="center"
+                android:hint="写个直播标题可以吸引更多用户"
+                android:textColor="#ffffff"
+                android:textColorHint="#ffffff"
+                android:textSize="16sp"/>
+    <LinearLayout
+        android:id="@+id/line_root"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        >
+      <LinearLayout
+          android:layout_width="match_parent"
+          android:layout_height="match_parent"
+          android:layout_weight="1"></LinearLayout>
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:layout_marginTop="20dp"
-        android:textColor="#ffffff"
-        android:textColorHint="#ffffff"
-        android:textSize="16sp"
-        android:gravity="center"
-        android:hint="写个直播标题可以吸引更多用户"/>
-    <RadioGroup
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginTop="20dp"
-        android:layout_gravity="center_horizontal">
-        <RadioButton
+        android:layout_marginBottom="50dp"
+
+        android:orientation="vertical">
+
+        <RadioGroup
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:button="@null"
-            android:background="@drawable/wechat_selector"
-            />
-        <RadioButton
-            android:layout_width="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/wechat_selector"
+                android:button="@null"
+                />
+
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:background="@drawable/friend_selector"
+                android:button="@null"
+                />
+
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:background="@drawable/weibo_selector"
+                android:button="@null"
+                />
+
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:background="@drawable/qqzone_selector"
+                android:button="@null"
+                android:checked="true"
+                />
+
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:background="@drawable/qq_selector"
+                android:button="@null"
+                />
+        </RadioGroup>
+
+        <TextView
+            android:id="@+id/tv_start"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:button="@null"
-            android:background="@drawable/friend_selector"
             android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/text_stroke"
+            android:gravity="center"
+            android:text="开始直播"
+            android:textColor="#ffffff"
+            android:textSize="18sp"
             />
-        <RadioButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:button="@null"
-            android:background="@drawable/weibo_selector"
-            android:layout_marginLeft="20dp"
-            />
-        <RadioButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:button="@null"
-            android:checked="true"
-            android:background="@drawable/qqzone_selector"
-            android:layout_marginLeft="20dp"
-            />
-        <RadioButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:button="@null"
-            android:background="@drawable/qq_selector"
-            android:layout_marginLeft="20dp"
-            />
-    </RadioGroup>
-    <TextView
-        android:id="@+id/tv_start"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginRight="20dp"
-        android:layout_marginLeft="20dp"
-        android:layout_marginTop="20dp"
-        android:text="开始直播"
-        android:background="@drawable/text_stroke"
-        android:textSize="18sp"
-        android:gravity="center"
-        android:textColor="#ffffff"
-        />
+    </LinearLayout>
+    </LinearLayout>
 </LinearLayout>
