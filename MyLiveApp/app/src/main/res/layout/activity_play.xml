@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_play"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.example.myliveapp.activity.PlayActivity">
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="0dp">
+
+        <com.tencent.rtmp.ui.TXCloudVideoView
+            android:id="@+id/video_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_centerInParent="true"
+            android:visibility="gone"/>
+
+        <com.example.myliveapp.view.FavorLayout
+            android:id="@+id/praise"
+            android:layout_gravity="right"
+            android:layout_width="200dp"
+            android:layout_height="match_parent"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="10dp"
+            android:layout_gravity="bottom">
+            <Button
+                android:id="@+id/btnMsg_play"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginLeft="20dp"
+                android:background="@drawable/bottom_icon_message"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"/>
+
+            <Button
+                android:id="@+id/btnFocus_play"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginRight="20dp"
+                android:background="@drawable/bottom_icon_private_chat"/>
+
+            <Button
+                android:id="@+id/btnShare_play"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginRight="20dp"
+                android:background="@drawable/bottom_icon_share"/>
+            <Button
+                android:id="@+id/btnGift_play"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginRight="20dp"
+                android:background="@drawable/bottom_icon_gift"/>
+            <Button
+                android:id="@+id/btnClose_play"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginRight="20dp"
+                android:background="@drawable/bottom_icon_close"/>
+        </LinearLayout>
+
+        <ScrollView
+            android:id="@+id/scrollview"
+
+            android:layout_width="match_parent"
+            android:background="#60ffffff"
+            android:layout_height="match_parent"
+            android:fadeScrollbars="true"
+            android:scrollbars="vertical"
+            android:layout_marginTop="167dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginBottom="60dp">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/logViewEvent"
+                android:textSize="13dp"
+                android:scrollbars = "vertical"
+                android:padding="2dp"/>
+        </ScrollView>
+
+        <ImageView
+            android:id="@+id/loadingImageView"
+            android:layout_width="34dp"
+            android:layout_height="34dp"
+            android:layout_gravity="center"
+            android:src="@drawable/loading_animation"
+            android:visibility="gone"/>
+
+    </FrameLayout>
+</LinearLayout>

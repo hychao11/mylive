@@ -1,1 +1,2 @@
 include ':app', ':Pulllibrary'
+include ':slidingMenuLib'

@@ -1,5 +1,9 @@
 [
     {
+        "merged": "F:\\git\\zhibo\\mylive\\MyLiveApp\\Pulllibrary\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable\\refresh.xml",
+        "source": "F:\\git\\zhibo\\mylive\\MyLiveApp\\Pulllibrary\\build\\intermediates\\bundles\\debug\\res\\drawable\\refresh.xml"
+    },
+    {
         "merged": "F:\\git\\zhibo\\mylive\\MyLiveApp\\Pulllibrary\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable\\indicator_bg_top.xml",
         "source": "F:\\git\\zhibo\\mylive\\MyLiveApp\\Pulllibrary\\build\\intermediates\\bundles\\debug\\res\\drawable\\indicator_bg_top.xml"
     },

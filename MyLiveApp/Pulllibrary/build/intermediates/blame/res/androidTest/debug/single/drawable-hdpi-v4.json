@@ -1,11 +1,35 @@
 [
     {
+        "merged": "F:\\git\\zhibo\\mylive\\MyLiveApp\\Pulllibrary\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable-hdpi-v4\\li_refresh_cat_4.png",
+        "source": "F:\\git\\zhibo\\mylive\\MyLiveApp\\Pulllibrary\\build\\intermediates\\bundles\\debug\\res\\drawable-hdpi-v4\\li_refresh_cat_4.png"
+    },
+    {
+        "merged": "F:\\git\\zhibo\\mylive\\MyLiveApp\\Pulllibrary\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable-hdpi-v4\\li_refresh_cat_5.png",
+        "source": "F:\\git\\zhibo\\mylive\\MyLiveApp\\Pulllibrary\\build\\intermediates\\bundles\\debug\\res\\drawable-hdpi-v4\\li_refresh_cat_5.png"
+    },
+    {
         "merged": "F:\\git\\zhibo\\mylive\\MyLiveApp\\Pulllibrary\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable-hdpi-v4\\indicator_arrow.png",
         "source": "F:\\git\\zhibo\\mylive\\MyLiveApp\\Pulllibrary\\build\\intermediates\\bundles\\debug\\res\\drawable-hdpi-v4\\indicator_arrow.png"
     },
     {
+        "merged": "F:\\git\\zhibo\\mylive\\MyLiveApp\\Pulllibrary\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable-hdpi-v4\\li_refresh_cat_2.png",
+        "source": "F:\\git\\zhibo\\mylive\\MyLiveApp\\Pulllibrary\\build\\intermediates\\bundles\\debug\\res\\drawable-hdpi-v4\\li_refresh_cat_2.png"
+    },
+    {
+        "merged": "F:\\git\\zhibo\\mylive\\MyLiveApp\\Pulllibrary\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable-hdpi-v4\\li_refresh_cat_3.png",
+        "source": "F:\\git\\zhibo\\mylive\\MyLiveApp\\Pulllibrary\\build\\intermediates\\bundles\\debug\\res\\drawable-hdpi-v4\\li_refresh_cat_3.png"
+    },
+    {
         "merged": "F:\\git\\zhibo\\mylive\\MyLiveApp\\Pulllibrary\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable-hdpi-v4\\default_ptr_flip.png",
         "source": "F:\\git\\zhibo\\mylive\\MyLiveApp\\Pulllibrary\\build\\intermediates\\bundles\\debug\\res\\drawable-hdpi-v4\\default_ptr_flip.png"
+    },
+    {
+        "merged": "F:\\git\\zhibo\\mylive\\MyLiveApp\\Pulllibrary\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable-hdpi-v4\\li_refresh_cat_1.png",
+        "source": "F:\\git\\zhibo\\mylive\\MyLiveApp\\Pulllibrary\\build\\intermediates\\bundles\\debug\\res\\drawable-hdpi-v4\\li_refresh_cat_1.png"
+    },
+    {
+        "merged": "F:\\git\\zhibo\\mylive\\MyLiveApp\\Pulllibrary\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable-hdpi-v4\\li_refresh_cat_6.png",
+        "source": "F:\\git\\zhibo\\mylive\\MyLiveApp\\Pulllibrary\\build\\intermediates\\bundles\\debug\\res\\drawable-hdpi-v4\\li_refresh_cat_6.png"
     },
     {
         "merged": "F:\\git\\zhibo\\mylive\\MyLiveApp\\Pulllibrary\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable-hdpi-v4\\default_ptr_rotate.png",

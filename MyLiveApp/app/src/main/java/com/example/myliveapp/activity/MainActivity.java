@@ -1,9 +1,15 @@
 package com.example.myliveapp.activity;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+<<<<<<< HEAD
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+=======
+import android.view.KeyEvent;
+>>>>>>> 2859e0960af747ea9cbe1c23c3bb14599bdb6d75
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RadioButton;
@@ -22,7 +28,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     private MainFragment mains;
     private PersonalFragment personal;
     private ImageView ivPush;
-
+    private MyApp app;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,9 +38,11 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     }
 
     private void initView() {
+        app= (MyApp) getApplication();
         rbHome = (RadioButton) findViewById(R.id.main_home);
         rbPersonal = (RadioButton) findViewById(R.id.main_personal);
         ivPush = (ImageView) findViewById(R.id.main_push);
+<<<<<<< HEAD
         mains = new MainFragment();
         personal = new PersonalFragment();
         rbHome.setOnClickListener(this);
@@ -52,6 +60,11 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         }else if(str.equals("personal")){
             transaction.show(personal).hide(mains).commit();
         }
+=======
+        ivPush.setOnClickListener(this);
+        rbHome.setOnClickListener(this);
+
+>>>>>>> 2859e0960af747ea9cbe1c23c3bb14599bdb6d75
     }
     @Override
     public void onClick(View v) {
@@ -78,5 +91,35 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         }
     }
 
+<<<<<<< HEAD
     
+=======
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if(keyCode == KeyEvent.KEYCODE_BACK) { //监控/拦截/屏蔽返回键
+            dialog();
+            return false;
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
+    public void dialog(){
+        AlertDialog.Builder builder=new AlertDialog.Builder(this);
+        builder.setTitle("确定要退出吗");
+        builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+                app.close();
+            }
+        });
+        builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        builder.create().show();
+    }
+>>>>>>> 2859e0960af747ea9cbe1c23c3bb14599bdb6d75
 }

@@ -5,6 +5,8 @@
       <module fileurl="file://$PROJECT_DIR$/MyLiveApp.iml" filepath="$PROJECT_DIR$/MyLiveApp.iml" />
       <module fileurl="file://$PROJECT_DIR$/Pulllibrary/Pulllibrary.iml" filepath="$PROJECT_DIR$/Pulllibrary/Pulllibrary.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/slidingMenuLib/slidingMenuLib.iml" filepath="$PROJECT_DIR$/slidingMenuLib/slidingMenuLib.iml" />
+      <module fileurl="file://$PROJECT_DIR$/slidingMenuLib/slidingMenuLib.iml" filepath="$PROJECT_DIR$/slidingMenuLib/slidingMenuLib.iml" />
     </modules>
   </component>
 </project>

@@ -42,9 +42,10 @@
 
         <activity android:name=".activity.MainActivity">
         </activity>
-        <activity android:name=".activity.PushActivity">
+        <activity android:name=".activity.PushActivity"
+            android:windowSoftInputMode="adjustResize|stateAlwaysHidden">
         </activity>
-        <activity android:name=".activity.RoomStartActivity">
+        <activity android:name=".activity.RoomStartActivity" android:windowSoftInputMode="adjustPan|stateAlwaysHidden">
         </activity>
         <activity android:name=".activity.RoomFinishActivity">
         </activity>
@@ -70,7 +71,7 @@
             android:name="com.umeng.socialize.editorpage.ShareActivity"
             android:excludeFromRecents="true"
             android:theme="@style/Theme.UMDefault"/>
-        <activity android:name=".activity.ShareActivity">
+        <activity android:name=".activity.ShareActivity" >
         </activity>
         <activity android:name=".activity.BaseActivity">
         </activity>
@@ -85,8 +86,18 @@
         </activity>
         <activity android:name=".activity.SearchActivity">
         </activity>
+
         <activity android:name=".activity.HotActivity">
         </activity>
+
+        <activity android:name=".activity.PlayActivity">
+        </activity>
+        <!-- ATTENTION: This was auto-generated to add Google Play services to your project for
+     App Indexing.  See https://g.co/AppIndexing/AndroidStudio for more information. -->
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="8487000"/>
+
     </application>
 
 </manifest>
