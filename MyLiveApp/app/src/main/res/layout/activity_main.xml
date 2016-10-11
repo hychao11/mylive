@@ -12,10 +12,10 @@
         android:layout_height="match_parent"></RelativeLayout>
 
     <RelativeLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:background="#4de7e7e7">
+        android:background="#4de7e7e7">s
         <RadioButton
             android:id="@+id/main_home"
             android:layout_width="wrap_content"
@@ -47,6 +47,7 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_alignParentBottom="true"
-        android:layout_marginBottom="5dp"
+        android:layout_marginBottom="10dp"
         android:background="@drawable/li_maintab_party_pic_selected"/>
+
 </RelativeLayout>

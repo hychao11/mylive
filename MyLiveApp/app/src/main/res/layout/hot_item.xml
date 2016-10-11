@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <android.support.v4.view.ViewPager
+            android:id="@+id/car_vp"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:layout_centerHorizontal="true"/>
+
+        <RelativeLayout
+            android:id="@+id/rl"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@id/car_vp"
+            android:layout_marginTop="5dp"
+            android:layout_centerHorizontal="true"
+            >
+
+            <LinearLayout
+                android:id="@+id/car_line"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"/>
+            <View
+                android:id="@+id/mview"
+                android:layout_width="3dp"
+                android:layout_height="3dp"
+                android:background="@drawable/dot_on"
+                />
+        </RelativeLayout>
+    </RelativeLayout>
+</RelativeLayout>

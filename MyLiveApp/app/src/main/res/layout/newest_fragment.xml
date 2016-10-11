@@ -1,10 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
-<GridView
-    android:id="@+id/newest_gv"
+                android:layout_height="match_parent"
+                xmlns:ptr="http://schemas.android.com/tools">
+<com.handmark.pulltorefresh.library.PullToRefreshGridView
+    android:id="@+id/pull_grid"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:numColumns="2"/>
+    android:numColumns="auto_fit"
+    android:horizontalSpacing="5dp"
+    android:verticalSpacing="5dp"
+    ptr:ptrAnimationStyle="flip"
+    ptr:ptrDrawable="@drawable/default_ptr_flip"
+    ></com.handmark.pulltorefresh.library.PullToRefreshGridView>
 </RelativeLayout>

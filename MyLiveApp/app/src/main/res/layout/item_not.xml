@@ -3,9 +3,27 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 >
-
     <ImageView
-        android:id="@+id/att_item_img_img"
+        android:id="@+id/not_item_img"
+        android:layout_width="match_parent"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_height="300dp"
+        android:scaleType="fitXY"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true"/>
+    <View
+        android:id="@+id/ms_iv_blank"
+        android:layout_width="match_parent"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_height="300dp"
+        android:scaleType="fitXY"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true"
+        android:background="@drawable/ms_img_bg"/>
+    <com.example.myliveapp.view.CircleImageView
+        android:id="@+id/hot_item_img_img"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_marginTop="10dp"
@@ -16,8 +34,8 @@
         android:layout_height="wrap_content"
         android:text="name"
         android:layout_marginLeft="70dp"
-        android:textColor="#ff0000"
-        android:id="@+id/att_item_tv_city"
+        android:textColor="#ffffff"
+        android:id="@+id/hot_item_tv_city"
         android:layout_marginTop="30dp"
         />
 
@@ -25,29 +43,32 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="aaa"
-        android:textSize="25sp"
-        android:textColor="#00ffff"
+        android:textSize="20sp"
+        android:textColor="#ffffff"
         android:layout_marginLeft="70dp"
-        android:id="@+id/att_item_tv_name"
+        android:id="@+id/hot_item_tv_name"
 />
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="LIVE"
         android:textColor="#ff0000"
-        android:id="@+id/att_item_tv_live"
-       android:layout_alignRight="@id/att_item_img"
+        android:id="@+id/hot_item_tv_live"
+       android:layout_alignRight="@id/not_item_img"
         android:padding="10dp"
         android:layout_marginRight="10dp"
         android:layout_marginTop="10dp"
      android:background="@drawable/li_message_view_send_bg_normal"
         />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="LIVE"
+        android:textColor="#ffffff"
+        android:id="@+id/hot_item_tv_livename"
+        android:layout_alignBottom="@id/not_item_img"
+        android:layout_marginLeft="10dp"
+        />
 
-    <ImageView
-        android:id="@+id/att_item_img"
-        android:layout_width="match_parent"
-        android:layout_height="300dp"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"/>
+
 </RelativeLayout>

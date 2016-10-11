@@ -2,23 +2,15 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
-    <android.support.v4.view.ViewPager
-        android:id="@+id/hot_vp"
-        android:layout_width="match_parent"
-        android:layout_height="150dp">
-    </android.support.v4.view.ViewPager>
-    <RadioGroup
-        android:id="@+id/rg"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignBottom="@id/hot_vp"
-        android:gravity="center"
-        android:orientation="horizontal" >
-    </RadioGroup>
-    <ListView
-        android:id="@+id/hot_lv"
+
+    <com.handmark.pulltorefresh.library.PullToRefreshListView
+        xmlns:ptr="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/pull"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/hot_vp"
-        android:layout_marginTop="10dp"/>
+        android:dividerHeight="5dp"
+        android:divider="#00000000"
+        ptr:ptrAnimationStyle="flip"
+        ptr:ptrDrawable="@drawable/default_ptr_flip"
+        />
 </RelativeLayout>
